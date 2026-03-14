@@ -1,0 +1,281 @@
+ <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>For Aria 🎂</title>
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Indie+Flower&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
+    <style>
+        :root {
+            --aria-pink: #ff85a2;
+            --paper: #ffffff;
+        }
+
+        body, html {
+            margin: 0;
+            padding: 0;
+            background: #ffeef2;
+            font-family: 'Indie Flower', cursive;
+            overflow-x: hidden;
+        }
+
+        /* TEXT RAIN BACKGROUND */
+        #bg-canvas {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            z-index: 0;
+            opacity: 0.3;
+        }
+
+        /* PRE-WISH OVERLAY (The 4 Texts) */
+        #wish-sequence {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: white;
+            z-index: 2000;
+            display: none; /* Hidden until start */
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+        }
+
+        .wish-text {
+            font-family: 'Dancing Script', cursive;
+            font-size: 2.5rem;
+            color: var(--aria-pink);
+            opacity: 0;
+            transition: opacity 0.8s ease;
+            position: absolute;
+            text-align: center;
+            padding: 20px;
+        }
+
+        /* PANDA HOLDING THE DIARY */
+        .panda-holder {
+            width: 150px;
+            margin: 0 auto -40px auto;
+            position: relative;
+            z-index: 15;
+        }
+
+        .panda-paws {
+            display: flex;
+            justify-content: space-between;
+            width: 480px; 
+            position: absolute;
+            bottom: -15px;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        .paw {
+            width: 60px;
+            height: 40px;
+            background: #2f2f2f;
+            border-radius: 20px 20px 10px 10px;
+            border: 2px solid #000;
+        }
+
+        /* DIARY PAGE STYLING */
+        .content-wrapper {
+            position: relative;
+            z-index: 10;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 100vh 20px 100px 20px;
+        }
+
+        .diary-page {
+            background: var(--paper);
+            max-width: 450px;
+            width: 90%;
+            margin-bottom: 120px;
+            padding: 50px 40px 40px 40px;
+            border-radius: 10px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            position: relative;
+            border: 1px solid #eee;
+        }
+
+        .diary-page h2 { 
+            font-family: 'Dancing Script', cursive; 
+            color: #d63384; 
+            margin-top: 0;
+            text-align: center;
+        }
+
+        .diary-page p { font-size: 1.25rem; line-height: 1.6; color: #333; }
+
+        /* INTRO OVERLAY */
+        #intro-overlay {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: white;
+            z-index: 1000;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            transition: 1s ease;
+        }
+
+        .btn-open {
+            background: var(--aria-pink);
+            color: white;
+            border: none;
+            padding: 18px 40px;
+            font-size: 1.5rem;
+            border-radius: 50px;
+            cursor: pointer;
+            box-shadow: 0 10px 25px rgba(255,133,162,0.4);
+        }
+
+        .hidden { opacity: 0; pointer-events: none; }
+        
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+    </style>
+</head>
+<body>
+
+    <canvas id="bg-canvas"></canvas>
+
+    <div id="wish-sequence">
+        <div class="wish-text" id="wish1">Finally, it's time...</div>
+        <div class="wish-text" id="wish2">It's Aria's Birthday! HAPPY BIRTHDAY MY DEAR BLUE💙 🎂</div>
+        <div class="wish-text" id="wish3">I have a little secret for you...</div>
+        <div class="wish-text" id="wish4">Open the diary to see! 🐼</div>
+    </div>
+
+    <div id="intro-overlay">
+        <div style="font-size: 5rem; animation: bounce 2s infinite;">🎁</div>
+        <h1 style="font-family: 'Dancing Script'; color: #d63384; font-size: 3rem;">A Gift for Aria</h1>
+        <button class="btn-open" onclick="startWishSequence()">Click Me</button>
+    </div>
+
+    <div class="content-wrapper">
+        <div class="panda-holder">
+            <svg viewBox="0 0 100 100"><circle cx="50" cy="50" r="45" fill="white" stroke="black" stroke-width="2"/><circle cx="25" cy="25" r="15" fill="black"/><circle cx="75" cy="25" r="15" fill="black"/><circle cx="35" cy="45" r="10" fill="black"/><circle cx="65" cy="45" r="10" fill="black"/><circle cx="35" cy="45" r="3" fill="white"/><circle cx="65" cy="45" r="3" fill="white"/><circle cx="50" cy="60" r="6" fill="black"/></svg>
+            <div class="panda-paws"><div class="paw"></div><div class="paw"></div></div>
+        </div>
+        <div class="diary-page">
+            <h2>The Surprise</h2>
+            <p>Happy Birthday, Aria! I asked this little panda to help me show you something special today. I wanted to create something that shows how special ur to me. As u scrool through these pages, know that every word was written with u in my mind and a little piece of my gratitude for having you in my life.</p>
+        </div>
+
+        <div class="panda-holder">
+            <svg viewBox="0 0 100 100"><circle cx="50" cy="50" r="45" fill="white" stroke="black" stroke-width="2"/><circle cx="25" cy="25" r="15" fill="black"/><circle cx="75" cy="25" r="15" fill="black"/><circle cx="35" cy="45" r="10" fill="black"/><circle cx="65" cy="45" r="10" fill="black"/><circle cx="50" cy="60" r="6" fill="black"/></svg>
+            <div class="panda-paws"><div class="paw"></div><div class="paw"></div></div>
+        </div>
+        <div class="diary-page">
+            <h2>Your Special Day</h2>
+            <p>Today is all about you. I hope you get to spend it doing exactly what makes you happy. Whether it's relaxing or celebrating with friends, I hope it's perfect. I wish i can meet with you in this special day😔 but insha Allah i'll come to you soon </p>
+        </div>
+
+
+<div class="panda-holder">
+            <svg viewBox="0 0 100 100"><circle cx="50" cy="50" r="45" fill="white" stroke="black" stroke-width="2"/><circle cx="25" cy="25" r="15" fill="black"/><circle cx="75" cy="25" r="15" fill="black"/><circle cx="35" cy="45" r="10" fill="black"/><circle cx="65" cy="45" r="10" fill="black"/><circle cx="50" cy="60" r="6" fill="black"/></svg>
+            <div class="panda-paws"><div class="paw"></div><div class="paw"></div></div>
+        </div>
+        <div class="diary-page">
+            <h2>Our memories🧸</h2>
+            <p> Remember when we first met? And honestly, I can’t forget those memories.. they just stick with me. The laughs, the conversations, the little moments that didn’t seem big at the time but mean a lot now. U have a way of making every moment feel like a scene from a fantasy world. I treasure every memory we share</p>
+        </div>
+
+
+        <div class="panda-holder">
+            <svg viewBox="0 0 100 100"><circle cx="50" cy="50" r="45" fill="white" stroke="black" stroke-width="2"/><circle cx="25" cy="25" r="15" fill="black"/><circle cx="75" cy="25" r="15" fill="black"/><circle cx="35" cy="45" r="10" fill="black"/><circle cx="65" cy="45" r="10" fill="black"/><circle cx="50" cy="60" r="6" fill="black"/></svg>
+            <div class="panda-paws"><div class="paw"></div><div class="paw"></div></div>
+        </div>
+        <div class="diary-page">
+            <h2>My wishes🎀</h2>
+            <p>For vour birthdav, I wish vou a vear of zero stress and 100% happiness. I hope you reach every goal you've set, because I know how hard you work for vour dreams. You deserve the best. Aria. I can't wait to see what this next vear brings for you. I know you 're going to achieve big things. I'1l be right here cheering vou on! </p>
+        </div>
+
+        <div class="panda-holder">
+            <svg viewBox="0 0 100 100"><circle cx="50" cy="50" r="45" fill="white" stroke="black" stroke-width="2"/><circle cx="25" cy="25" r="15" fill="black"/><circle cx="75" cy="25" r="15" fill="black"/><circle cx="35" cy="45" r="10" fill="black"/><circle cx="65" cy="45" r="10" fill="black"/><circle cx="50" cy="60" r="6" fill="black"/></svg>
+            <div class="panda-paws"><div class="paw"></div><div class="paw"></div></div>
+        </div>
+        <div class="diary-page">
+            <h2>To ARIA💙</h2>
+            <p>Final page for now. but our story keeps going. Thank you for being the amazing person you are. Don't ever let the world dim your sparkle. Happy Birthday, Dear Aria!</p>
+            <button onclick="celebrate()" style="width:100%; padding:15px; border-radius:10px; border:none; background:#ff85a2; color:white; cursor:pointer; font-family:'Dancing Script'; font-size:1.2rem;">Final Surprise! 🎉</button>
+        </div>
+    </div>
+
+    <audio id="birthday-music" loop>
+        <source src="https://www.mboxdrive.com/Happy%20Birthday%20Instrumental.mp3" type="audio/mpeg">
+    </audio>
+
+    <script>
+        const canvas = document.getElementById('bg-canvas');
+        const ctx = canvas.getContext('2d');
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+
+        const text = "HAPPY BIRTHDAY DEAR ARIA ";
+        const drops = Array(Math.floor(canvas.width/18)).fill(1);
+
+        function drawRain() {
+            ctx.fillStyle = "rgba(255, 238, 242, 0.2)";
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            ctx.fillStyle = "#ff85a2";
+            ctx.font = "18px Arial";
+            drops.forEach((y, i) => {
+                const char = text[Math.floor(Math.random()*text.length)];
+                ctx.fillText(char, i*18, y*18);
+                if (y*18 > canvas.height && Math.random() > 0.975) drops[i] = 0;
+                drops[i]++;
+            });
+        }
+
+        function startWishSequence() {
+            // Start music immediately
+            document.getElementById('birthday-music').play();
+            
+            // Hide cover
+            document.getElementById('intro-overlay').classList.add('hidden');
+            
+            // Show sequence
+            const sequence = document.getElementById('wish-sequence');
+            sequence.style.display = 'flex';
+
+            const wishes = [
+                document.getElementById('wish1'),
+                document.getElementById('wish2'),
+                document.getElementById('wish3'),
+                document.getElementById('wish4')
+            ];
+
+            let i = 0;
+            const interval = setInterval(() => {
+                if (i > 0) wishes[i-1].style.opacity = 0;
+                if (i < wishes.length) {
+                    wishes[i].style.opacity = 1;
+                    i++;
+                } else {
+                    clearInterval(interval);
+                    setTimeout(() => {
+                        sequence.classList.add('hidden');
+                        setInterval(drawRain, 50);
+                        window.scrollTo({ top: window.innerHeight, behavior: 'smooth' });
+                    }, 1000);
+                }
+            }, 2000);
+        }
+
+        function celebrate() {
+            confetti({ particleCount: 150, spread: 70, origin: { y: 0.6 }, colors: ['#ff85a2', '#ffffff'] });
+        }
+
+        window.addEventListener('resize', () => {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        });
+    </script>
+</body>
+</html>
